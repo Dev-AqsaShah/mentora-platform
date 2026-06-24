@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentora — your CSS journey, mentored</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A1820;
+    --bg-2:#0E2430;
+    --surface:#12303C;
+    --surface-2:#163745;
+    --amber:#F0A24B;
+    --amber-bright:#FBBF6B;
+    --live:#2FB8A0;
+    --text:#EAF1F1;
+    --muted:#8FA6AE;
+    --line:rgba(240,162,75,.18);
+    --line-cool:rgba(143,166,174,.18);
+    --radius:18px;
+    --maxw:1140px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(900px 500px at 85% -5%, rgba(240,162,75,.10), transparent 60%),
+      radial-gradient(700px 500px at 0% 100%, rgba(47,184,160,.08), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'DM Sans',system-ui,sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:'Sora',sans-serif;font-weight:600;line-height:1.08;letter-spacing:-.02em}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--amber)}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .amber{color:var(--amber-bright)}
+
+  .btn{font-family:'DM Sans';font-weight:600;font-size:.94rem;border:none;cursor:pointer;border-radius:12px;padding:14px 26px;text-decoration:none;display:inline-block;transition:transform .15s,box-shadow .25s,background .2s}
+  .btn-primary{background:linear-gradient(180deg,var(--amber-bright),var(--amber));color:#241400;box-shadow:0 10px 28px rgba(240,162,75,.25)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(240,162,75,.38)}
+  .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--line-cool)}
+  .btn-ghost:hover{border-color:var(--amber);color:var(--amber-bright)}
+
+  /* nav */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:24px 0}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Sora';font-weight:700;font-size:1.4rem}
+  .brand .pen{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--amber-bright),var(--amber));border-radius:8px;color:#241400;font-weight:700}
+  .navlinks{display:flex;gap:30px;align-items:center}
+  .navlinks a{color:var(--muted);text-decoration:none;font-size:.92rem;transition:color .2s}
+  .navlinks a:hover{color:var(--text)}
+  @media(max-width:860px){.navlinks{display:none}}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.02fr .98fr;gap:46px;align-items:center;padding:42px 0 76px}
+  .hero h1{font-size:clamp(2.6rem,5.4vw,4.1rem);margin:16px 0}
+  .hero .lead{color:var(--muted);font-size:1.1rem;max-width:36ch;margin-bottom:28px}
+  .cta-row{display:flex;gap:13px;flex-wrap:wrap}
+  .stats{display:flex;gap:28px;margin-top:30px;flex-wrap:wrap}
+  .stats div{display:flex;flex-direction:column}
+  .stats .n{font-family:'Sora';font-weight:700;font-size:1.5rem;color:var(--text)}
+  .stats .l{font-family:'JetBrains Mono';font-size:.7rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+  @media(max-width:860px){.hero{grid-template-columns:1fr;text-align:center;padding-top:6px}.hero .lead{margin-left:auto;margin-right:auto}.cta-row,.stats{justify-content:center}.player-wrap{order:-1}}
+
+  /* secure player (signature) */
+  .player-wrap{display:flex;justify-content:center}
+  .player{width:100%;max-width:480px;background:var(--surface);border:1px solid var(--line-cool);border-radius:20px;padding:14px;box-shadow:0 30px 70px rgba(0,0,0,.45)}
+  .screen{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,#0c2a33,#15414b)}
+  .screen .scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted)}
+  .screen .scene .play{width:62px;height:62px;border-radius:50%;background:rgba(240,162,75,.16);border:1px solid var(--amber);display:flex;align-items:center;justify-content:center;color:var(--amber-bright);font-size:1.4rem}
+  .screen .scene small{font-family:'JetBrains Mono';font-size:.68rem;letter-spacing:.1em}
+  /* moving watermark */
+  .watermark{position:absolute;font-family:'JetBrains Mono';font-size:.72rem;color:rgba(234,241,241,.32);white-space:nowrap;pointer-events:none;animation:drift 16s linear infinite}
+  @keyframes drift{
+    0%{top:12%;left:8%}25%{top:70%;left:60%}50%{top:30%;left:75%}75%{top:78%;left:18%}100%{top:12%;left:8%}
+  }
+  .live-pill{position:absolute;top:12px;left:12px;display:flex;align-items:center;gap:6px;background:rgba(10,24,32,.7);padding:5px 11px;border-radius:999px;font-family:'JetBrains Mono';font-size:.66rem;letter-spacing:.08em;color:var(--text)}
+  .live-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--live);animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(47,184,160,.5)}50%{opacity:.6;box-shadow:0 0 0 6px rgba(47,184,160,0)}}
+  .player .bar{display:flex;align-items:center;gap:12px;padding:12px 6px 4px}
+  .player .bar .track{flex:1;height:5px;background:var(--surface-2);border-radius:99px;position:relative}
+  .player .bar .track i{position:absolute;left:0;top:0;height:100%;width:38%;background:var(--amber);border-radius:99px}
+  .player .bar .nodl{font-family:'JetBrains Mono';font-size:.64rem;color:var(--muted);display:flex;align-items:center;gap:5px}
+  .wave{display:flex;align-items:flex-end;gap:3px;height:18px}
+  .wave span{width:3px;background:var(--live);border-radius:2px;animation:eq 1s ease-in-out infinite}
+  .wave span:nth-child(2){animation-delay:.2s}.wave span:nth-child(3){animation-delay:.4s}.wave span:nth-child(4){animation-delay:.1s}.wave span:nth-child(5){animation-delay:.3s}
+  @keyframes eq{0%,100%{height:5px}50%{height:18px}}
+
+  /* scroll reveal */
+  .reveal{padding:70px 0}
+  .reveal-text{font-family:'Sora';font-weight:500;font-size:clamp(1.7rem,4vw,2.8rem);line-height:1.3;max-width:880px}
+  .reveal-text span{color:rgba(143,166,174,.3);transition:color .45s ease}
+  .reveal-text span.lit{color:var(--text)}
+  .reveal-text span.key.lit{color:var(--amber-bright)}
+
+  /* sections */
+  section{padding:70px 0}
+  .sec-head{max-width:620px;margin-bottom:42px}
+  .sec-head.center{margin:0 auto 42px;text-align:center}
+  .sec-head h2{font-size:clamp(1.9rem,4vw,2.8rem);margin-top:12px}
+  .sec-head p{color:var(--muted);margin-top:13px;font-size:1.02rem}
+  .fade{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .fade.in{opacity:1;transform:none}
+
+  /* split feature */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-bottom:30px}
+  .split.rev .vis{order:-1}
+  .split h3{font-size:clamp(1.6rem,3.4vw,2.2rem)}
+  .split p{color:var(--muted);margin-top:12px}
+  .split ul{list-style:none;margin-top:18px;display:grid;gap:10px}
+  .split li{display:flex;gap:10px;font-size:.96rem}
+  .split li::before{content:'→';color:var(--amber)}
+  .panel{background:var(--surface);border:1px solid var(--line-cool);border-radius:var(--radius);padding:22px}
+  @media(max-width:820px){.split{grid-template-columns:1fr;gap:28px}.split.rev .vis{order:0}}
+
+  /* live class mock */
+  .live-mock .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line-cool)}
+  .live-mock .chatline{display:flex;gap:9px;margin-bottom:10px;font-size:.86rem}
+  .live-mock .chatline b{color:var(--amber-bright);font-weight:600}
+  .live-mock .chatline span{color:var(--muted)}
+  .live-mock .ask{margin-top:14px;background:var(--surface-2);border:1px solid var(--line-cool);border-radius:10px;padding:10px 12px;color:var(--muted);font-size:.85rem;display:flex;justify-content:space-between}
+
+  /* syllabus */
+  .syllabus{display:grid;gap:10px}
+  .subj{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line-cool);border-radius:12px;padding:14px 16px;transition:border-color .2s}
+  .subj:hover{border-color:var(--amber)}
+  .subj .left{display:flex;align-items:center;gap:12px}
+  .subj .code{font-family:'JetBrains Mono';font-size:.7rem;color:var(--amber);border:1px solid var(--line);border-radius:6px;padding:3px 7px}
+  .subj .meta{font-family:'JetBrains Mono';font-size:.72rem;color:var(--muted)}
+
+  /* cards grid */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .gcard{background:var(--surface);border:1px solid var(--line-cool);border-radius:var(--radius);padding:26px;transition:transform .25s,border-color .25s}
+  .gcard:hover{transform:translateY(-4px);border-color:var(--amber)}
+  .gcard .ico{width:42px;height:42px;border-radius:11px;background:rgba(240,162,75,.12);display:flex;align-items:center;justify-content:center;color:var(--amber-bright);font-size:1.2rem;margin-bottom:14px}
+  .gcard h3{font-size:1.2rem;margin-bottom:6px}
+  .gcard p{color:var(--muted);font-size:.9rem}
+  @media(max-width:820px){.grid3{grid-template-columns:1fr}}
+
+  /* progress ring mock */
+  .ring-mock{display:flex;align-items:center;gap:20px}
+  .ring{width:96px;height:96px;flex:none}
+  .ring .track{fill:none;stroke:var(--surface-2);stroke-width:9}
+  .ring .prog{fill:none;stroke:var(--amber);stroke-width:9;stroke-linecap:round;stroke-dasharray:251;stroke-dashoffset:75;transform:rotate(-90deg);transform-origin:center}
+
+  /* paywall steps */
+  .pw{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .pw .s{background:var(--surface);border:1px solid var(--line-cool);border-radius:var(--radius);padding:24px}
+  .pw .s .n{font-family:'JetBrains Mono';color:var(--amber);font-size:.8rem}
+  .pw .s h3{font-size:1.15rem;margin:10px 0 6px}
+  .pw .s p{color:var(--muted);font-size:.9rem}
+  @media(max-width:820px){.pw{grid-template-columns:1fr}}
+
+  /* pricing */
+  .price-card{background:linear-gradient(180deg,var(--surface),var(--bg-2));border:1px solid var(--amber);border-radius:24px;max-width:460px;margin:0 auto;padding:38px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+  .price-card .trial{display:inline-block;background:rgba(47,184,160,.15);color:var(--live);font-family:'JetBrains Mono';font-size:.74rem;padding:7px 15px;border-radius:999px;margin-bottom:16px}
+  .price-card .amt{font-family:'Sora';font-weight:700;font-size:3.2rem}
+  .price-card .amt small{font-family:'DM Sans';font-size:1rem;color:var(--muted);font-weight:400}
+  .price-card ul{list-style:none;text-align:left;margin:22px 0;display:grid;gap:11px}
+  .price-card li{display:flex;gap:10px;font-size:.94rem}
+  .price-card li::before{content:'✓';color:var(--live);font-weight:700}
+  .price-card .btn{width:100%}
+  .pay{margin-top:16px;font-family:'JetBrains Mono';font-size:.72rem;color:var(--muted)}
+
+  footer{border-top:1px solid var(--line-cool);margin-top:30px;padding:42px 0 56px}
+  .foot-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px}
+  .disc{color:var(--muted);font-size:.78rem;max-width:44ch;margin-top:12px}
+  .foot-links{display:flex;gap:38px}
+  .foot-links a{display:block;color:var(--muted);text-decoration:none;font-size:.88rem;padding:5px 0}
+  .foot-links a:hover{color:var(--amber-bright)}
+
+  @media(prefers-reduced-motion:reduce){
+    .watermark,.live-pill .dot,.wave span{animation:none}
+    .reveal-text span{color:var(--text)}
+    .fade{opacity:1;transform:none;transition:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="brand"><span class="pen">✒</span>Mentora</div>
+    <div class="navlinks">
+      <a href="#live">Live classes</a>
+      <a href="#secure">Secure recordings</a>
+      <a href="#practice">Practice</a>
+      <a href="#doubts">Doubt desk</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#">Sign in</a>
+    </div>
+    <a href="#pricing" class="btn btn-primary">Start free trial</a>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div>
+      <span class="eyebrow">CSS &amp; competitive exam prep</span>
+      <h1>Learn CSS from one mentor — <span class="amber">live, then on replay</span>.</h1>
+      <p class="lead">Attend live classes, then rewatch the recordings anytime. Lectures are locked to you — no downloads, and your name rides on every frame.</p>
+      <div class="cta-row">
+        <a href="#pricing" class="btn btn-primary">Start 3-day free trial</a>
+        <a href="#secure" class="btn btn-ghost">See how it's protected</a>
+      </div>
+      <div class="stats">
+        <div><span class="n">6</span><span class="l">Compulsory papers</span></div>
+        <div><span class="n">Live</span><span class="l">+ recorded</span></div>
+        <div><span class="n">AI</span><span class="l">essay feedback</span></div>
+      </div>
+    </div>
+
+    <div class="player-wrap">
+      <div class="player">
+        <div class="screen">
+          <span class="live-pill"><span class="dot"></span> LIVE · Current Affairs</span>
+          <div class="watermark">Ahmed Khan · ahmed@email.com · ID 4821</div>
+          <div class="scene">
+            <div class="play">▶</div>
+            <small>YOUR NAME FOLLOWS THE VIDEO</small>
+          </div>
+        </div>
+        <div class="bar">
+          <span class="wave"><span></span><span></span><span></span><span></span><span></span></span>
+          <div class="track"><i></i></div>
+          <span class="nodl">⤓ Download off</span>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+
+<!-- SCROLL REVEAL -->
+<section class="reveal">
+  <div class="wrap">
+    <p class="reveal-text" id="revealText">CSS rewards discipline over shortcuts. Mentora gives you the <span class="key">structure</span>, the mentor, and the practice — so every week of effort actually <span class="key">counts</span>.</p>
+  </div>
+</section>
+
+<!-- LIVE CLASSES -->
+<section id="live">
+  <div class="wrap">
+    <div class="split fade">
+      <div>
+        <span class="eyebrow">01 · Live classes</span>
+        <h3>Be in the room — then keep the room.</h3>
+        <p>Join the mentor live with Q&amp;A, polls, and raise-hand. The moment a class ends, the recording lands in your library automatically.</p>
+        <ul>
+          <li>Live chat, raise hand, and instant polls</li>
+          <li>Class calendar with reminders before each session</li>
+          <li>Auto-saved recording, ready right after class</li>
+          <li>Attendance tracked for every session</li>
+        </ul>
+      </div>
+      <div class="vis">
+        <div class="panel live-mock">
+          <div class="head">
+            <span class="live-pill" style="position:static"><span class="dot"></span> LIVE</span>
+            <span class="mono" style="font-size:.72rem;color:var(--muted)">142 watching</span>
+          </div>
+          <div class="chatline"><b>Sana:</b> <span>Sir, can you repeat the précis rule?</span></div>
+          <div class="chatline"><b>Mentor:</b> <span>Sure — one-third length, own words.</span></div>
+          <div class="chatline"><b>Bilal:</b> <span>Poll: ready for a mock essay? ✅</span></div>
+          <div class="ask"><span>Ask a question…</span><span class="amber">Raise hand ✋</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECURE RECORDINGS -->
+<section id="secure">
+  <div class="wrap">
+    <div class="split rev fade">
+      <div>
+        <span class="eyebrow">02 · Secure recordings</span>
+        <h3>Your lectures stay yours.</h3>
+        <p>Recordings stream through encrypted, protected playback — there's no download button and no raw file to grab. And a moving watermark with the viewer's name and email rides across every frame.</p>
+        <ul>
+          <li>Encrypted streaming (DRM) — no downloadable file</li>
+          <li>Personal watermark on every frame to trace any leak</li>
+          <li>If a recording is leaked, the watermark shows whose it was</li>
+        </ul>
+        <p style="font-size:.82rem;margin-top:14px;color:var(--muted)">An honest note: no website can fully stop screen recording. The watermark is what makes leaking risky — anyone who shares it is named on the footage.</p>
+      </div>
+      <div class="vis">
+        <div class="player">
+          <div class="screen">
+            <span class="live-pill">▶ REPLAY · Pakistan Affairs</span>
+            <div class="watermark">Ahmed Khan · ahmed@email.com · ID 4821</div>
+            <div class="scene"><div class="play">▶</div><small>WATERMARK MOVES SO IT CAN'T BE CROPPED</small></div>
+          </div>
+          <div class="bar">
+            <div class="track"><i style="width:62%"></i></div>
+            <span class="nodl">⤓ Download disabled</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTENT STRUCTURE -->
+<section id="content">
+  <div class="wrap">
+    <div class="sec-head fade">
+      <span class="eyebrow">03 · Organised syllabus</span>
+      <h2>Every paper, in its place.</h2>
+      <p>Content is organised by paper and topic, so you always know what's next — and the mentor can upload notes, slides, and past papers anytime.</p>
+    </div>
+    <div class="syllabus fade">
+      <div class="subj"><div class="left"><span class="code">C-01</span><span>Essay</span></div><span class="meta">12 lectures · notes</span></div>
+      <div class="subj"><div class="left"><span class="code">C-02</span><span>English (Précis &amp; Composition)</span></div><span class="meta">10 lectures · past papers</span></div>
+      <div class="subj"><div class="left"><span class="code">C-03</span><span>General Science &amp; Ability</span></div><span class="meta">14 lectures · MCQs</span></div>
+      <div class="subj"><div class="left"><span class="code">C-04</span><span>Current Affairs</span></div><span class="meta">weekly live · quizzes</span></div>
+      <div class="subj"><div class="left"><span class="code">C-05</span><span>Pakistan Affairs</span></div><span class="meta">11 lectures · notes</span></div>
+      <div class="subj"><div class="left"><span class="code">C-06</span><span>Islamic Studies</span></div><span class="meta">9 lectures · slides</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRACTICE + AI -->
+<section id="practice">
+  <div class="wrap">
+    <div class="sec-head center fade">
+      <span class="eyebrow">04 · Practice &amp; feedback</span>
+      <h2>Where marks are actually made.</h2>
+    </div>
+    <div class="grid3">
+      <div class="gcard fade">
+        <div class="ico">📝</div>
+        <h3>Tests &amp; mock exams</h3>
+        <p>Auto-graded MCQs after each lesson, plus timed mock exams and real past papers.</p>
+      </div>
+      <div class="gcard fade">
+        <div class="ico">✍</div>
+        <h3>Essay &amp; précis feedback</h3>
+        <p>Submit your writing; get marked feedback from the mentor — the heart of CSS prep.</p>
+      </div>
+      <div class="gcard fade">
+        <div class="ico">🤖</div>
+        <h3>AI study assistant</h3>
+        <p>Instant essay evaluation, lecture summaries, flashcards, and generated practice questions.</p>
+      </div>
+    </div>
+    <div class="panel fade" style="margin-top:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px">
+      <div class="ring-mock">
+        <svg class="ring" viewBox="0 0 96 96"><circle class="track" cx="48" cy="48" r="40"/><circle class="prog" cx="48" cy="48" r="40"/></svg>
+        <div>
+          <div style="font-family:'Sora';font-weight:600;font-size:1.2rem">Your progress</div>
+          <div style="color:var(--muted);font-size:.9rem">70% of Current Affairs complete · 3-day streak</div>
+        </div>
+      </div>
+      <div style="color:var(--muted);font-size:.9rem;max-width:34ch">A dashboard tracks what you've watched, your test scores, and your study streak — so momentum is visible.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DOUBT DESK -->
+<section id="doubts">
+  <div class="wrap">
+    <div class="split fade">
+      <div>
+        <span class="eyebrow">05 · Doubt desk</span>
+        <h3>Questions live here — not your WhatsApp.</h3>
+        <p>No sharing the mentor's number, no midnight messages, no chaotic group. Students ask on the platform; the mentor answers during the hours they choose. Boundaries for the teacher, clear answers for everyone.</p>
+        <ul>
+          <li>The mentor's phone number is never shared</li>
+          <li>Mentor sets office hours — questions are answered then</li>
+          <li>Answers are saved to a searchable FAQ, so repeats fade</li>
+          <li>Ask by subject; a daily limit keeps it civil</li>
+        </ul>
+      </div>
+      <div class="vis">
+        <div class="panel">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding-bottom:14px;border-bottom:1px solid var(--line-cool)">
+            <span class="mono" style="font-size:.72rem;color:var(--muted)">OFFICE HOURS</span>
+            <span class="mono" style="font-size:.7rem;color:var(--live)">🔒 Number stays private</span>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 18px">
+            <span class="code" style="font-family:'JetBrains Mono';font-size:.72rem;color:var(--amber);border:1px solid var(--line);border-radius:6px;padding:5px 9px">Mon 8–9 PM</span>
+            <span class="code" style="font-family:'JetBrains Mono';font-size:.72rem;color:var(--amber);border:1px solid var(--line);border-radius:6px;padding:5px 9px">Wed 8–9 PM</span>
+            <span class="code" style="font-family:'JetBrains Mono';font-size:.72rem;color:var(--amber);border:1px solid var(--line);border-radius:6px;padding:5px 9px">Sat 5–6 PM</span>
+          </div>
+          <div class="chatline" style="display:block;margin-bottom:12px;font-size:.86rem">
+            <div style="color:var(--muted)"><b style="color:var(--text)">Sana</b> · <span class="mono" style="font-size:.66rem">Précis</span></div>
+            <div style="margin-top:3px">How strict is the one-third length rule?</div>
+            <div style="margin-top:6px;background:rgba(47,184,160,.1);border-left:2px solid var(--live);padding:8px 10px;border-radius:6px;color:var(--muted)"><b class="amber">Mentor:</b> Aim for one-third, ±10% is fine. <span style="color:var(--live)">✓ Answered</span></div>
+          </div>
+          <div class="chatline" style="display:block;font-size:.86rem">
+            <div style="color:var(--muted)"><b style="color:var(--text)">Bilal</b> · <span class="mono" style="font-size:.66rem">Current Affairs</span></div>
+            <div style="margin-top:3px">Best source for IMF updates?</div>
+            <div style="margin-top:6px;color:var(--muted);font-family:'JetBrains Mono';font-size:.72rem">⏳ Queued · answered in next office hours</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACCESS / PAYWALL -->
+<section id="access">
+  <div class="wrap">
+    <div class="sec-head fade">
+      <span class="eyebrow">06 · Access &amp; trial</span>
+      <h2>See what's inside. Try it free. Then unlock.</h2>
+    </div>
+    <div class="pw">
+      <div class="s fade"><div class="n">BEFORE</div><h3>Browse the catalogue</h3><p>See the full syllabus, lecture titles, and a couple of free preview classes before you pay.</p></div>
+      <div class="s fade"><div class="n">3 DAYS</div><h3>Free trial — full access</h3><p>Watch lectures, join live, and try the practice tools with no limits for 3 days.</p></div>
+      <div class="s fade"><div class="n">AFTER</div><h3>Subscribe to keep watching</h3><p>When the trial ends, content locks and only the catalogue stays visible until you subscribe.</p></div>
+    </div>
+    <div class="panel fade" style="margin-top:20px;display:flex;gap:14px;align-items:center">
+      <span style="font-size:1.4rem">🔐</span>
+      <div><b>One account, your devices only.</b> <span style="color:var(--muted)">Each membership is limited to a small number of devices with a login cap — no sharing one account across a whole batch.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-head center fade">
+      <span class="eyebrow">Membership</span>
+      <h2>One plan. Everything included.</h2>
+    </div>
+    <div class="price-card fade">
+      <span class="trial">3 days free — full access</span>
+      <div class="amt">Rs 5,000<small> / month</small></div>
+      <p style="color:var(--muted);font-size:.9rem">Cancel anytime. During the trial you can watch everything and join live.</p>
+      <ul>
+        <li>All live classes + full recordings library</li>
+        <li>Notes, slides &amp; past papers</li>
+        <li>Tests, mock exams &amp; essay feedback</li>
+        <li>AI study assistant</li>
+        <li>Secure, watermarked playback</li>
+      </ul>
+      <a href="#" class="btn btn-primary">Start 3-day free trial</a>
+      <div class="pay">Easypaisa &amp; JazzCash (Pakistan) · Payoneer (international)</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <div class="brand"><span class="pen">✒</span>Mentora</div>
+      <p class="disc">Mentora is an independent learning platform for CSS and competitive-exam aspirants. Lectures are protected and licensed for personal study only.</p>
+    </div>
+    <div class="foot-links">
+      <div>
+        <a href="#live">Live classes</a>
+        <a href="#secure">Secure recordings</a>
+        <a href="#practice">Practice</a>
+      </div>
+      <div>
+        <a href="#pricing">Pricing</a>
+        <a href="#">Sign in</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  // scroll word highlight
+  const rt=document.getElementById('revealText');
+  if(rt && !reduce){
+    const frag=[];
+    rt.childNodes.forEach(node=>{
+      if(node.nodeType===3){
+        node.textContent.split(/(\s+)/).forEach(tok=>{
+          if(tok.trim()){const s=document.createElement('span');s.textContent=tok;frag.push(s);}
+          else if(tok){frag.push(document.createTextNode(tok));}
+        });
+      } else frag.push(node.cloneNode(true));
+    });
+    rt.innerHTML='';frag.forEach(n=>rt.appendChild(n));
+    const words=[...rt.querySelectorAll('span')];
+    const onScroll=()=>{const r=rt.getBoundingClientRect(),vh=innerHeight;let p=(vh*0.82-r.top)/(vh*0.55);p=Math.max(0,Math.min(1,p));const n=Math.round(p*words.length);words.forEach((w,i)=>w.classList.toggle('lit',i<n));};
+    addEventListener('scroll',onScroll,{passive:true});onScroll();
+  }
+
+  // fade-up
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.14});
+  document.querySelectorAll('.fade').forEach(el=>io.observe(el));
+  if(reduce) document.querySelectorAll('.fade').forEach(el=>el.classList.add('in'));
+</script>
+</body>
+</html>
